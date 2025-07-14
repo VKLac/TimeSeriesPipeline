@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 
 from scripts.functions import scrape_data_indicators
+from sqlalchemy import create_engine
 
 # %%
 urls = ["https://www.gov.br/receitafederal/pt-br",
@@ -31,5 +32,13 @@ for url in urls:
 
 data_monitoring = pd.DataFrame(data_monitoring)
 
-data_monitoring.head()
+engine = create_engine("postgresql://vilacerda:aiops123@localhost:5432/monitoramento")
+
+data_monitoring.to_sql(
+    name = "tracking_websites",
+    con = engine,
+    if_exists = "append",
+    index = False
+)
+
 
